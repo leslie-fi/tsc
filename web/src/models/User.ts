@@ -1,15 +1,19 @@
 import axios, { AxiosResponse } from 'axios';
+import { Eventing } from './Eventing';
 
 interface UserProps {
   id?: number;
   name?: string;
   age?: number;
 }
-
+// decided refactor option:
+// only accept properties into constructor
+// Hard code dependencies as class properties
 export class User {
+  events: Eventing = new Eventing();
   constructor(private data: UserProps) {}
 
-  get(propName: string): number | string {
+  get(propName: keyof UserProps): number | string | undefined {
     return this.data[propName];
   }
 
