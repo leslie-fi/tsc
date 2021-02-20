@@ -6,11 +6,10 @@ interface UserProps {
   name?: string;
   age?: number;
 }
-// decided refactor option:
-// only accept properties into constructor
-// Hard code dependencies as class properties
+
 export class User {
-  events: Eventing = new Eventing();
+  public events: Eventing = new Eventing();
+  
   constructor(private data: UserProps) {}
 
   get(propName: keyof UserProps): number | string | undefined {

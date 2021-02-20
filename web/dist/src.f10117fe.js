@@ -1917,7 +1917,50 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/User.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Eventing.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Eventing = void 0;
+
+var Eventing = /*#__PURE__*/function () {
+  function Eventing() {
+    _classCallCheck(this, Eventing);
+
+    this.events = {};
+  }
+
+  _createClass(Eventing, [{
+    key: "on",
+    value: function on(eventName, callback) {
+      var handlers = this.events[eventName] || [];
+      handlers.push(callback);
+      this.events[eventName] = handlers;
+    }
+  }, {
+    key: "trigger",
+    value: function trigger(eventName) {
+      var handlers = this.events[eventName];
+      if (!handlers || !handlers.length) return;
+      handlers.forEach(function (callback) {
+        return callback();
+      });
+    }
+  }]);
+
+  return Eventing;
+}();
+
+exports.Eventing = Eventing;
+},{}],"src/models/User.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1939,12 +1982,14 @@ exports.User = void 0;
 
 var axios_1 = __importDefault(require("axios"));
 
+var Eventing_1 = require("./Eventing");
+
 var User = /*#__PURE__*/function () {
   function User(data) {
     _classCallCheck(this, User);
 
     this.data = data;
-    this.events = {};
+    this.events = new Eventing_1.Eventing();
   }
 
   _createClass(User, [{
@@ -1956,22 +2001,6 @@ var User = /*#__PURE__*/function () {
     key: "set",
     value: function set(update) {
       Object.assign(this.data, update);
-    }
-  }, {
-    key: "on",
-    value: function on(eventName, callback) {
-      var handlers = this.events[eventName] || [];
-      handlers.push(callback);
-      this.events[eventName] = handlers;
-    }
-  }, {
-    key: "trigger",
-    value: function trigger(eventName) {
-      var handlers = this.events[eventName];
-      if (!handlers || !handlers.length) return;
-      handlers.forEach(function (callback) {
-        return callback();
-      });
     }
   }, {
     key: "fetch",
@@ -2001,29 +2030,25 @@ var User = /*#__PURE__*/function () {
 }();
 
 exports.User = User;
-},{"axios":"node_modules/axios/index.js"}],"src/index.ts":[function(require,module,exports) {
+},{"axios":"node_modules/axios/index.js","./Eventing":"src/models/Eventing.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var User_1 = require("./models/User");
+var User_1 = require("./models/User"); // import axios from 'axios';
+
 
 var user1 = new User_1.User({
-  id: 2
+  name: 'new record',
+  age: 100
 });
-user1.set({
-  name: 'lisa marie joyce',
-  age: 22
-}); // user1.save()
-
-var newbUser = new User_1.User({
-  name: 'Wino4ever',
-  age: 500
-}); // newbUser.save();
-
-user1.fetch();
+user1.save();
+user1.events.on('change', function () {
+  console.log('it çhanged');
+});
+user1.events.trigger('change');
 },{"./models/User":"src/models/User.ts"}],"../../../.nvm/versions/node/v14.15.4/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -2052,7 +2077,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64755" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51205" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
