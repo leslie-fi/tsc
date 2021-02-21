@@ -1,10 +1,8 @@
 import { User } from './models/User';
-// import axios from 'axios';
-const user1 = new User({ name: 'new record', age: 100 });
+
+const user1 = new User({ id: 3, name: 'new 1', age: 10 });
 
 user1.on('change', () => {
-console.log('it CHANGEDDD')
+console.log(user1)
 });
-user1.trigger('change')
-
-console.log(user1.get('age'))
+user1.fetch()
