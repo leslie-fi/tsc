@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { Attributes } from './Attributes';
 import { Eventing } from './Eventing';
 import { Sync } from './Sync';
@@ -42,6 +42,17 @@ export class User {
     }
     this.sync.fetch(id).then((response: AxiosResponse): void => {
       this.set(response.data)
+    })
+  }
+
+  save(): void {
+    this.sync.save(this.attributes.getAll())
+    .then((response: AxiosResponse): void => {
+      this.trigger('save')
+    })
+    .catch((error: AxiosError): void => {
+      this.trigger('error')
+      console.trace(error)
     })
   }
 }
