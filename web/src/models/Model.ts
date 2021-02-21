@@ -1,4 +1,4 @@
-import { AxiosError, AxiosPromise, AxiosResponse } from "axios";
+import { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
 
 interface ModelAttributes<T> {
   set(value: T): void;
@@ -26,18 +26,12 @@ export class Model<T extends HasId> {
     private events: Events,
     private sync: Sync<T>
   ) {}
+// can do shortened syntax bc nolonger doing initialization within constructor
+  on = this.events.on;
 
-  get on() {
-    return this.events.on;
-  }
+  trigger = this.events.trigger;
 
-  get trigger() {
-    return this.events.trigger;
-  }
-
-  get get() {
-    return this.attributes.get;
-  }
+  get = this.attributes.get;
 
   set(update: T): void {
     this.attributes.set(update);
