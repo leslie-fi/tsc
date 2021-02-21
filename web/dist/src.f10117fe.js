@@ -160,39 +160,6 @@ var Attributes = /*#__PURE__*/function () {
 }();
 
 exports.Attributes = Attributes;
-},{}],"src/models/Eventing.ts":[function(require,module,exports) {
-"use strict";
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Eventing = void 0;
-
-var Eventing = function Eventing() {
-  var _this = this;
-
-  _classCallCheck(this, Eventing);
-
-  this.events = {};
-
-  this.on = function (eventName, callback) {
-    var handlers = _this.events[eventName] || [];
-    handlers.push(callback);
-    _this.events[eventName] = handlers;
-  };
-
-  this.trigger = function (eventName) {
-    var handlers = _this.events[eventName];
-    if (!handlers || !handlers.length) return;
-    handlers.forEach(function (callback) {
-      return callback();
-    });
-  };
-};
-
-exports.Eventing = Eventing;
 },{}],"node_modules/axios/lib/helpers/bind.js":[function(require,module,exports) {
 'use strict';
 
@@ -1993,7 +1960,7 @@ module.exports.default = axios;
 
 },{"./utils":"node_modules/axios/lib/utils.js","./helpers/bind":"node_modules/axios/lib/helpers/bind.js","./core/Axios":"node_modules/axios/lib/core/Axios.js","./core/mergeConfig":"node_modules/axios/lib/core/mergeConfig.js","./defaults":"node_modules/axios/lib/defaults.js","./cancel/Cancel":"node_modules/axios/lib/cancel/Cancel.js","./cancel/CancelToken":"node_modules/axios/lib/cancel/CancelToken.js","./cancel/isCancel":"node_modules/axios/lib/cancel/isCancel.js","./helpers/spread":"node_modules/axios/lib/helpers/spread.js","./helpers/isAxiosError":"node_modules/axios/lib/helpers/isAxiosError.js"}],"node_modules/axios/index.js":[function(require,module,exports) {
 module.exports = require('./lib/axios');
-},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/Sync.ts":[function(require,module,exports) {
+},{"./lib/axios":"node_modules/axios/lib/axios.js"}],"src/models/ApiSync.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2011,18 +1978,18 @@ var __importDefault = this && this.__importDefault || function (mod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Sync = void 0;
+exports.ApiSync = void 0;
 
 var axios_1 = __importDefault(require("axios"));
 
-var Sync = /*#__PURE__*/function () {
-  function Sync(rootUrl) {
-    _classCallCheck(this, Sync);
+var ApiSync = /*#__PURE__*/function () {
+  function ApiSync(rootUrl) {
+    _classCallCheck(this, ApiSync);
 
     this.rootUrl = rootUrl;
   }
 
-  _createClass(Sync, [{
+  _createClass(ApiSync, [{
     key: "fetch",
     value: function fetch(id) {
       return axios_1.default.get("".concat(this.rootUrl, "/").concat(id));
@@ -2040,11 +2007,44 @@ var Sync = /*#__PURE__*/function () {
     }
   }]);
 
-  return Sync;
+  return ApiSync;
 }();
 
-exports.Sync = Sync;
-},{"axios":"node_modules/axios/index.js"}],"src/models/User.ts":[function(require,module,exports) {
+exports.ApiSync = ApiSync;
+},{"axios":"node_modules/axios/index.js"}],"src/models/Eventing.ts":[function(require,module,exports) {
+"use strict";
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Eventing = void 0;
+
+var Eventing = function Eventing() {
+  var _this = this;
+
+  _classCallCheck(this, Eventing);
+
+  this.events = {};
+
+  this.on = function (eventName, callback) {
+    var handlers = _this.events[eventName] || [];
+    handlers.push(callback);
+    _this.events[eventName] = handlers;
+  };
+
+  this.trigger = function (eventName) {
+    var handlers = _this.events[eventName];
+    if (!handlers || !handlers.length) return;
+    handlers.forEach(function (callback) {
+      return callback();
+    });
+  };
+};
+
+exports.Eventing = Eventing;
+},{}],"src/models/Model.ts":[function(require,module,exports) {
 "use strict";
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2056,26 +2056,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.User = void 0;
+exports.Model = void 0;
 
-var Attributes_1 = require("./Attributes");
+var Model = /*#__PURE__*/function () {
+  function Model(attributes, events, sync) {
+    _classCallCheck(this, Model);
 
-var Eventing_1 = require("./Eventing");
-
-var Sync_1 = require("./Sync");
-
-var rootUrl = "http://localhost:3000/users";
-
-var User = /*#__PURE__*/function () {
-  function User(attrs) {
-    _classCallCheck(this, User);
-
-    this.events = new Eventing_1.Eventing();
-    this.sync = new Sync_1.Sync(rootUrl);
-    this.attributes = new Attributes_1.Attributes(attrs);
+    this.attributes = attributes;
+    this.events = events;
+    this.sync = sync;
   }
 
-  _createClass(User, [{
+  _createClass(Model, [{
     key: "on",
     get: function get() {
       return this.events.on;
@@ -2127,11 +2119,73 @@ var User = /*#__PURE__*/function () {
     }
   }]);
 
-  return User;
+  return Model;
 }();
 
+exports.Model = Model;
+},{}],"src/models/User.ts":[function(require,module,exports) {
+"use strict";
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.User = void 0;
+
+var Attributes_1 = require("./Attributes");
+
+var ApiSync_1 = require("./ApiSync");
+
+var Eventing_1 = require("./Eventing");
+
+var Model_1 = require("./Model");
+
+var rootUrl = "http://localhost:3000/users";
+
+var User = /*#__PURE__*/function (_Model_1$Model) {
+  _inherits(User, _Model_1$Model);
+
+  var _super = _createSuper(User);
+
+  function User() {
+    _classCallCheck(this, User);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(User, null, [{
+    key: "buildUser",
+    value: function buildUser(attrs) {
+      return new User(new Attributes_1.Attributes(attrs), new Eventing_1.Eventing(), new ApiSync_1.ApiSync(rootUrl));
+    }
+  }]);
+
+  return User;
+}(Model_1.Model);
+
 exports.User = User;
-},{"./Attributes":"src/models/Attributes.ts","./Eventing":"src/models/Eventing.ts","./Sync":"src/models/Sync.ts"}],"src/index.ts":[function(require,module,exports) {
+},{"./Attributes":"src/models/Attributes.ts","./ApiSync":"src/models/ApiSync.ts","./Eventing":"src/models/Eventing.ts","./Model":"src/models/Model.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2140,11 +2194,16 @@ Object.defineProperty(exports, "__esModule", {
 
 var User_1 = require("./models/User");
 
-var user1 = new User_1.User({
-  name: 'robot1',
-  age: 10
+var user1 = User_1.User.buildUser({
+  name: 'robot4',
+  age: 200
 });
-user1.save();
+user1.on('change', function () {
+  return console.log("".concat(user1, " changed"));
+});
+user1.set({
+  age: 30
+});
 },{"./models/User":"src/models/User.ts"}],"../../../.nvm/versions/node/v14.15.4/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -2173,7 +2232,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50161" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50940" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
