@@ -3,9 +3,7 @@ import { User, UserProps } from './models/User';
 
 const rootUrl = `http://localhost:3000/users`;
 
-const collection = new Collection<User, UserProps>(rootUrl, (json: UserProps) =>
-  User.buildUser(json)
-);
+const collection = User.buildUserCollection();
 
 collection.on('change', () => {
   console.dir(collection.models);
