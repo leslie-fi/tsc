@@ -1,0 +1,31 @@
+import { Eventing } from './Eventing';
+import { User, UserProps } from './User';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+
+export class Collection {
+  models: User[] = [];
+  events: Eventing = new Eventing();
+  
+  constructor(public rootUrl: string) {}
+
+  get on() {
+    return this.events.on;
+  }
+
+  get trigger()  {
+    return this.events.trigger;
+  }
+
+  fetch(): void {
+    axios.get(this.rootUrl)
+    .then((response: AxiosResponse): void => {
+      response.data.forEach((value: UserProps) => {
+        const user = User.buildUser(value);
+        this.models.push(user)
+      });
+    })
+    .catch((error: AxiosError): void => {
+      console.trace(error)
+    })
+  }
+}

@@ -1,5 +1,11 @@
-import { User } from './models/User';
+import { Collection } from './models/Collection';
 
-const user1 = User.buildUser({ name: 'robot4', age: 200 });
-user1.on('change', () => console.log(`${user1} changed`))
-user1.set({age: 30})
+const rootUrl = `http://localhost:3000/users`;
+
+const collection = new Collection(rootUrl);
+
+collection.on('change', () => {
+  console.log(collection);
+});
+
+collection.fetch()
