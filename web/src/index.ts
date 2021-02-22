@@ -1,12 +1,8 @@
-import { Collection } from './models/Collection';
-import { User, UserProps } from './models/User';
+import { User } from './models/User';
+import { UserForm } from './views/UserForm';
 
-const rootUrl = `http://localhost:3000/users`;
+let rootElement = document.getElementById('root');
+const user = User.buildUser({name: 'NaTe', age: 31});
+const userForm = new UserForm(rootElement, user);
 
-const collection = User.buildUserCollection();
-
-collection.on('change', () => {
-  console.dir(collection.models);
-});
-
-collection.fetch();
+userForm.render();

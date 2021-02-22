@@ -2230,7 +2230,15 @@ var User = /*#__PURE__*/function (_Model_1$Model) {
     return _super.apply(this, arguments);
   }
 
-  _createClass(User, null, [{
+  _createClass(User, [{
+    key: "setRandomAge",
+    value: function setRandomAge() {
+      var age = Math.round(Math.random() * 100);
+      this.set({
+        age: age
+      });
+    }
+  }], [{
     key: "buildUser",
     value: function buildUser(attrs) {
       return new User(new Attributes_1.Attributes(attrs), new Eventing_1.Eventing(), new ApiSync_1.ApiSync(rootUrl));
@@ -2248,7 +2256,119 @@ var User = /*#__PURE__*/function (_Model_1$Model) {
 }(Model_1.Model);
 
 exports.User = User;
-},{"./Attributes":"src/models/Attributes.ts","./ApiSync":"src/models/ApiSync.ts","./Eventing":"src/models/Eventing.ts","./Model":"src/models/Model.ts","./Collection":"src/models/Collection.ts"}],"src/index.ts":[function(require,module,exports) {
+},{"./Attributes":"src/models/Attributes.ts","./ApiSync":"src/models/ApiSync.ts","./Eventing":"src/models/Eventing.ts","./Model":"src/models/Model.ts","./Collection":"src/models/Collection.ts"}],"src/views/UserForm.ts":[function(require,module,exports) {
+"use strict";
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.UserForm = void 0;
+
+var UserForm = /*#__PURE__*/function () {
+  function UserForm(parent, model) {
+    var _this = this;
+
+    _classCallCheck(this, UserForm);
+
+    this.parent = parent;
+    this.model = model;
+
+    this.onSetAgeClick = function () {
+      _this.model.setRandomAge();
+
+      console.log(_this.model);
+    };
+
+    this.onSetNameClick = function () {
+      var input = _this.parent.querySelector('input');
+
+      var name = input.value;
+
+      _this.model.set({
+        name: name
+      });
+    };
+
+    this.bindModel();
+  }
+
+  _createClass(UserForm, [{
+    key: "bindModel",
+    value: function bindModel() {
+      var _this2 = this;
+
+      this.model.on('change', function () {
+        _this2.render();
+      });
+    }
+  }, {
+    key: "eventsMap",
+    value: function eventsMap() {
+      return {
+        'click:#set-age': this.onSetAgeClick,
+        'click:#set-name': this.onSetNameClick
+      };
+    }
+  }, {
+    key: "template",
+    value: function template() {
+      return "\n      <div>\n        <h1>User Form</h1>\n        <h3>name: ".concat(this.model.get('name'), "</h3>\n        <h3>age: ").concat(this.model.get('age'), "</h3>\n        <input name='set-name' type=\"text\"/>\n        <button id='set-name'>Change Name</buttonid>\n        <button id='set-age'>Set Random Age</button>\n      </div>\n    ");
+    }
+  }, {
+    key: "bindEvents",
+    value: function bindEvents(fragment) {
+      var eventsMap = this.eventsMap();
+
+      var _loop = function _loop(eventKey) {
+        var _eventKey$split = eventKey.split(':'),
+            _eventKey$split2 = _slicedToArray(_eventKey$split, 2),
+            eventName = _eventKey$split2[0],
+            selector = _eventKey$split2[1];
+
+        fragment.querySelectorAll(selector).forEach(function (element) {
+          element.addEventListener(eventName, eventsMap[eventKey]);
+          console.log('eventsMap[eventKey]', eventsMap[eventKey]);
+        });
+      };
+
+      for (var eventKey in eventsMap) {
+        _loop(eventKey);
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      this.parent.innerHTML = '';
+      var templateElement = document.createElement('template');
+      templateElement.innerHTML = this.template();
+      this.bindEvents(templateElement.content);
+      this.parent.append(templateElement.content);
+    }
+  }]);
+
+  return UserForm;
+}();
+
+exports.UserForm = UserForm;
+},{}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2257,13 +2377,16 @@ Object.defineProperty(exports, "__esModule", {
 
 var User_1 = require("./models/User");
 
-var rootUrl = "http://localhost:3000/users";
-var collection = User_1.User.buildUserCollection();
-collection.on('change', function () {
-  console.dir(collection.models);
+var UserForm_1 = require("./views/UserForm");
+
+var rootElement = document.getElementById('root');
+var user = User_1.User.buildUser({
+  name: 'NaTe',
+  age: 31
 });
-collection.fetch();
-},{"./models/User":"src/models/User.ts"}],"../../../.nvm/versions/node/v14.15.4/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var userForm = new UserForm_1.UserForm(rootElement, user);
+userForm.render();
+},{"./models/User":"src/models/User.ts","./views/UserForm":"src/views/UserForm.ts"}],"../../../.nvm/versions/node/v14.15.4/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2291,7 +2414,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52082" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60913" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
