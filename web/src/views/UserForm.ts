@@ -1,15 +1,8 @@
 import { User } from '../models/User';
+import { View } from './View';
 
-export class UserForm {
-  constructor(public parent: Element, public model: User) {
-    this.bindModel();
-  }
+export class UserForm extends View {
 
-  bindModel(): void {
-    this.model.on('change', () => {
-      this.render();
-    });
-  }
   eventsMap(): { [key: string]: () => void } {
     return {
       'click:#set-age': this.onSetAgeClick,
@@ -23,9 +16,12 @@ export class UserForm {
   };
 
   onSetNameClick = (): void => {
-    const input = this.parent.querySelector('input')
-    const name = input.value
-    this.model.set({name})
+    const input = this.parent.querySelector('input');
+    if (input) {
+      this.model.set({ name: input.value });
+    } else {
+      throw new Error('Could not find input element on this.parent');
+    }
   };
 
   template(): string {
@@ -41,21 +37,8 @@ export class UserForm {
     `;
   }
 
-  bindEvents(fragment: DocumentFragment): void {
-    const eventsMap = this.eventsMap();
-
-    for (let eventKey in eventsMap) {
-      const [eventName, selector] = eventKey.split(':');
-
-      fragment.querySelectorAll(selector).forEach((element) => {
-        element.addEventListener(eventName, eventsMap[eventKey]);
-        console.log('eventsMap[eventKey]', eventsMap[eventKey]);
-      });
-    }
-  }
-
   render(): void {
-    this.parent.innerHTML = ''
+    this.parent.innerHTML = '';
     const templateElement = document.createElement('template');
     templateElement.innerHTML = this.template();
     this.bindEvents(templateElement.content);
