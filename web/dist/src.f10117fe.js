@@ -2288,10 +2288,21 @@ var View = /*#__PURE__*/function () {
 
     this.parent = parent;
     this.model = model;
+    this.regions = {};
     this.bindModel();
   }
 
   _createClass(View, [{
+    key: "eventsMap",
+    value: function eventsMap() {
+      return {};
+    }
+  }, {
+    key: "regionsMap",
+    value: function regionsMap() {
+      return {};
+    }
+  }, {
     key: "bindModel",
     value: function bindModel() {
       var _this = this;
@@ -2322,12 +2333,24 @@ var View = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "mapRegions",
+    value: function mapRegions(fragment) {
+      var regionsMap = this.regionsMap();
+
+      for (var key in regionsMap) {
+        var selector = regionsMap[key];
+        var element = fragment.querySelector(selector);
+        if (element) this.regions[key] = element;
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       this.parent.innerHTML = '';
       var templateElement = document.createElement('template');
       templateElement.innerHTML = this.template();
       this.bindEvents(templateElement.content);
+      this.mapRegions(templateElement.content);
       this.parent.append(templateElement.content);
     }
   }]);
@@ -2336,7 +2359,7 @@ var View = /*#__PURE__*/function () {
 }();
 
 exports.View = View;
-},{}],"src/views/UserForm.ts":[function(require,module,exports) {
+},{}],"src/views/UserEdit.ts":[function(require,module,exports) {
 "use strict";
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -2364,71 +2387,40 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.UserForm = void 0;
+exports.UserEdit = void 0;
 
 var View_1 = require("./View");
 
-var UserForm = /*#__PURE__*/function (_View_1$View) {
-  _inherits(UserForm, _View_1$View);
+var UserEdit = /*#__PURE__*/function (_View_1$View) {
+  _inherits(UserEdit, _View_1$View);
 
-  var _super = _createSuper(UserForm);
+  var _super = _createSuper(UserEdit);
 
-  function UserForm() {
-    var _this;
+  function UserEdit() {
+    _classCallCheck(this, UserEdit);
 
-    _classCallCheck(this, UserForm);
-
-    _this = _super.apply(this, arguments);
-
-    _this.onSetAgeClick = function () {
-      _this.model.setRandomAge();
-
-      console.log(_this.model);
-    };
-
-    _this.onSetNameClick = function () {
-      var input = _this.parent.querySelector('input');
-
-      if (input) {
-        _this.model.set({
-          name: input.value
-        });
-      } else {
-        throw new Error('Could not find input element on this.parent');
-      }
-    };
-
-    return _this;
+    return _super.apply(this, arguments);
   }
 
-  _createClass(UserForm, [{
-    key: "eventsMap",
-    value: function eventsMap() {
+  _createClass(UserEdit, [{
+    key: "regionsMap",
+    value: function regionsMap() {
       return {
-        'click:#set-age': this.onSetAgeClick,
-        'click:#set-name': this.onSetNameClick
+        userShow: '.user-show',
+        userForm: '.user-form'
       };
     }
   }, {
     key: "template",
     value: function template() {
-      return "\n      <div>\n        <h1>User Form</h1>\n        <h3>name: ".concat(this.model.get('name'), "</h3>\n        <h3>age: ").concat(this.model.get('age'), "</h3>\n        <input name='set-name' type=\"text\"/>\n        <button id='set-name'>Change Name</buttonid>\n        <button id='set-age'>Set Random Age</button>\n      </div>\n    ");
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      this.parent.innerHTML = '';
-      var templateElement = document.createElement('template');
-      templateElement.innerHTML = this.template();
-      this.bindEvents(templateElement.content);
-      this.parent.append(templateElement.content);
+      return "\n      <div>\n        <div class=\"user-show\"></div>\n        <div class=\"user-form\"></div>\n      </div>\n    ";
     }
   }]);
 
-  return UserForm;
+  return UserEdit;
 }(View_1.View);
 
-exports.UserForm = UserForm;
+exports.UserEdit = UserEdit;
 },{"./View":"src/views/View.ts"}],"src/index.ts":[function(require,module,exports) {
 "use strict";
 
@@ -2438,7 +2430,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var User_1 = require("./models/User");
 
-var UserForm_1 = require("./views/UserForm");
+var UserEdit_1 = require("./views/UserEdit");
 
 var rootElement = document.getElementById('root');
 var user = User_1.User.buildUser({
@@ -2447,12 +2439,13 @@ var user = User_1.User.buildUser({
 });
 
 if (rootElement) {
-  var userForm = new UserForm_1.UserForm(rootElement, user);
-  userForm.render();
+  var userEdit = new UserEdit_1.UserEdit(rootElement, user);
+  userEdit.render();
+  console.log(userEdit);
 } else {
   throw new Error('Root element not found');
 }
-},{"./models/User":"src/models/User.ts","./views/UserForm":"src/views/UserForm.ts"}],"../../../.nvm/versions/node/v14.15.4/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"./models/User":"src/models/User.ts","./views/UserEdit":"src/views/UserEdit.ts"}],"../../../.nvm/versions/node/v14.15.4/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -2480,7 +2473,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "62699" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63770" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

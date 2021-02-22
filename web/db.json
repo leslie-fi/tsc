@@ -54,6 +54,21 @@
       "name": "robot1",
       "age": 10,
       "id": 11
+    },
+    {
+      "name": "NaTe",
+      "age": 49,
+      "id": 12
+    },
+    {
+      "name": "jamal",
+      "age": 49,
+      "id": 13
+    },
+    {
+      "name": "jamal",
+      "age": 74,
+      "id": 14
     }
   ]
 }
