@@ -6,21 +6,25 @@
   "scripts": {
     "start:build": "tsc -w",
     "start:run": "nodemon build/index.js",
-    "start": "concurrently npm:start:*"
+    "start": "concurrently npm:start:*",
+    "test": ""
   },
   "keywords": [],
   "author": "Leslie T",
   "license": "MIT",
   "dependencies": {
+    "@types/helmet": "^4.0.0",
     "concurrently": "^6.0.0",
     "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "helmet": "^4.4.1",
     "nodemon": "^2.0.7"
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.42",
     "@types/cors": "^2.8.10",
-    "@types/express": "^4.17.11"
+    "@types/express": "^4.17.11",
+    "reflect-metadata": "^0.1.13"
   }
 }

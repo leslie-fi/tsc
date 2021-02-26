@@ -11,7 +11,7 @@ function requireAuth(req, res, next) {
 }
 const router = express_1.Router();
 exports.router = router;
-router.get('/login', (req, res, next) => {
+router.get('/login', (_req, res, _next) => {
     res.send(`
       <form method='POST'>
         <div><label for="email">Email</label>
@@ -23,7 +23,7 @@ router.get('/login', (req, res, next) => {
       </form>
     `);
 });
-router.post('/login', (req, res, next) => {
+router.post('/login', (req, res, _next) => {
     const { email, password } = req.body;
     if (email && password && email === 'hi@hi.com' && password === 'pw') {
         //mark person as logged in
@@ -34,7 +34,7 @@ router.post('/login', (req, res, next) => {
         res.send('Invalid credentials');
     }
 });
-router.get('/', (req, res, next) => {
+router.get('/', (req, res, _next) => {
     if (!!req.session && req.session.loggedIn) {
         res.send(`
       <div>
@@ -56,6 +56,6 @@ router.get('/logout', (req, res) => {
     req.session = undefined;
     res.redirect('/');
 });
-router.get('/protected', requireAuth, (req, res) => {
+router.get('/protected', requireAuth, (_req, res) => {
     res.send('Welcome to protected route, logged in uzer!');
 });

@@ -1,13 +1,19 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import cookieSession from 'cookie-session';
 import { router } from './routes/loginRoutes';
-const app = express();
+import helmet from 'helmet';
+
+const app: Application = express();
+
+app.use(helmet());
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cookieSession({ keys: ['qwerty'] }));
 app.use(router);
-app.get('/', (req: Request, res: Response, next: NextFunction) => {
+
+app.get('/', (_req: Request, res: Response, _next: NextFunction) => {
   res.send(`
   <div>
     <h1>Hello there</h1>

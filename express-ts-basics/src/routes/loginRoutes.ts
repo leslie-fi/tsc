@@ -1,4 +1,4 @@
-import express, { Router, Request, Response, NextFunction } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 
 interface RequestWithBody extends Request {
   body: { [key: string]: string | undefined };
@@ -15,7 +15,7 @@ function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 const router = Router();
 
-router.get('/login', (req: Request, res: Response, next: NextFunction) => {
+router.get('/login', (_req: Request, res: Response, _next: NextFunction) => {
   res.send(
     `
       <form method='POST'>
@@ -32,7 +32,7 @@ router.get('/login', (req: Request, res: Response, next: NextFunction) => {
 
 router.post(
   '/login',
-  (req: RequestWithBody, res: Response, next: NextFunction) => {
+  (req: RequestWithBody, res: Response, _next: NextFunction) => {
     const { email, password } = req.body;
     if (email && password && email === 'hi@hi.com' && password === 'pw') {
       //mark person as logged in
@@ -44,7 +44,7 @@ router.post(
   }
 );
 
-router.get('/', (req: RequestWithBody, res: Response, next: NextFunction) => {
+router.get('/', (req: RequestWithBody, res: Response, _next: NextFunction) => {
   if (!!req.session && req.session.loggedIn) {
     res.send(`
       <div>
@@ -67,7 +67,7 @@ router.get('/logout', (req: Request, res: Response) => {
   res.redirect('/');
 });
 
-router.get('/protected', requireAuth,  (req: Request, res: Response) => {
+router.get('/protected', requireAuth,  (_req: Request, res: Response) => {
   res.send('Welcome to protected route, logged in uzer!')
 })
 
