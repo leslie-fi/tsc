@@ -15,9 +15,9 @@ function requireAuth(req: Request, res: Response, next: NextFunction) {
 
 const router = Router();
 
-router.get('/login', (_req: Request, res: Response, _next: NextFunction) => {
+// router.get('/login', (_req: Request, res: Response, _next: NextFunction) => {
   
-});
+// });
 
 router.post(
   '/login',

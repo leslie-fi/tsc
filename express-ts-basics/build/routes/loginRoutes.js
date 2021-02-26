@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.router = void 0;
-const express_1 = require("express");
+var express_1 = require("express");
 function requireAuth(req, res, next) {
     if (!!req.session && req.session.loggedIn) {
         next();
@@ -9,22 +9,12 @@ function requireAuth(req, res, next) {
     }
     res.sendStatus(403);
 }
-const router = express_1.Router();
+var router = express_1.Router();
 exports.router = router;
-router.get('/login', (_req, res, _next) => {
-    res.send(`
-      <form method='POST'>
-        <div><label for="email">Email</label>
-          <input name="email" type="text">
-            <div><label for="password">Password</label><input name="password" type="password"></div>
-          </input>
-        </div>
-        <button>Submit</button>
-      </form>
-    `);
-});
-router.post('/login', (req, res, _next) => {
-    const { email, password } = req.body;
+// router.get('/login', (_req: Request, res: Response, _next: NextFunction) => {
+// });
+router.post('/login', function (req, res, _next) {
+    var _a = req.body, email = _a.email, password = _a.password;
     if (email && password && email === 'hi@hi.com' && password === 'pw') {
         //mark person as logged in
         req.session = { loggedIn: true };
@@ -34,28 +24,18 @@ router.post('/login', (req, res, _next) => {
         res.send('Invalid credentials');
     }
 });
-router.get('/', (req, res, _next) => {
+router.get('/', function (req, res, _next) {
     if (!!req.session && req.session.loggedIn) {
-        res.send(`
-      <div>
-        <div>You are logged in!</div>
-        <a href='/logout'>Log Out</a>
-      </div>
-    `);
+        res.send("\n      <div>\n        <div>You are logged in!</div>\n        <a href='/logout'>Log Out</a>\n      </div>\n    ");
     }
     else {
-        res.send(`
-      <div>
-        <div>You are NOT logged in!</div>
-        <a href='/login'>Log In</a>
-      </div>
-    `);
+        res.send("\n      <div>\n        <div>You are NOT logged in!</div>\n        <a href='/login'>Log In</a>\n      </div>\n    ");
     }
 });
-router.get('/logout', (req, res) => {
+router.get('/logout', function (req, res) {
     req.session = undefined;
     res.redirect('/');
 });
-router.get('/protected', requireAuth, (_req, res) => {
+router.get('/protected', requireAuth, function (_req, res) {
     res.send('Welcome to protected route, logged in uzer!');
 });
