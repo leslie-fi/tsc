@@ -1,35 +1,20 @@
 import 'reflect-metadata';
-const plane = {
-  color: 'red',
-};
 
-Reflect.defineMetadata('note', 'hi thar', plane, 'color')
-const note = Reflect.getMetadata('note', plane, 'color');
-console.log(note)
+class Plane {
+  color: string = 'red';
 
-console.log('plane:', Reflect.getOwnMetadataKeys(plane, 'color'))
-// ['note']
+  @markFunction('hidden secret shh')
+  fly(): void {
+    console.log('vrrrrr')
+  }
+}
 
-// Reflect.defineMetadata('note', 'hello thar', plane);
+// factory decorator
+function markFunction(secretInfo: string){
+return function (target: Plane, key: string) {
+  Reflect.defineMetadata('secret', secretInfo, target, key)
+}
+}
+const secret = Reflect.getMetadata('secret', Plane.prototype, 'fly')
 
-// console.log(plane);
-// // result: { color: 'red' }
-
-// const noteMd = Reflect.getMetadata('note', plane);
-// console.log('metadata:', noteMd);
-// // metadata: hello thar
-
-// Reflect.defineMetadata('height', 10, plane);
-// const height = Reflect.getMetadata('height', plane);
-// const getMdKeys = Reflect.getMetadataKeys(plane);
-// console.log('get md keys', getMdKeys);
-// // [ 'note', 'height' ]
-
-// const getOwnMdKeys = Reflect.getOwnMetadataKeys(plane);
-// console.log('get own md keys', getOwnMdKeys);
-// // [ 'note', 'height' ]
-
-// console.log('note:', noteMd);
-// // note: hello thar
-// console.log('height:', height);
-// // height: 10
+console.log(secret) // 'hidden secret shh'
