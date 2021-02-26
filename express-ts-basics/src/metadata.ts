@@ -1,17 +1,35 @@
 import 'reflect-metadata';
 const plane = {
-  color: 'red'
-}
+  color: 'red',
+};
 
-Reflect.defineMetadata('note', 'hello thar', plane)
+Reflect.defineMetadata('note', 'hi thar', plane, 'color')
+const note = Reflect.getMetadata('note', plane, 'color');
+console.log(note)
 
-console.log(plane)
-// result: { color: 'red' }
-let md = Reflect.getMetadata('note', plane)
-
-console.log('metadata:', md)
-// metadata: hello thar
-console.log('get md keys',Reflect.getMetadataKeys(plane))
+console.log('plane:', Reflect.getOwnMetadataKeys(plane, 'color'))
 // ['note']
-console.log('get own md keys',Reflect.getOwnMetadataKeys(plane))
-// ['note']
+
+// Reflect.defineMetadata('note', 'hello thar', plane);
+
+// console.log(plane);
+// // result: { color: 'red' }
+
+// const noteMd = Reflect.getMetadata('note', plane);
+// console.log('metadata:', noteMd);
+// // metadata: hello thar
+
+// Reflect.defineMetadata('height', 10, plane);
+// const height = Reflect.getMetadata('height', plane);
+// const getMdKeys = Reflect.getMetadataKeys(plane);
+// console.log('get md keys', getMdKeys);
+// // [ 'note', 'height' ]
+
+// const getOwnMdKeys = Reflect.getOwnMetadataKeys(plane);
+// console.log('get own md keys', getOwnMdKeys);
+// // [ 'note', 'height' ]
+
+// console.log('note:', noteMd);
+// // note: hello thar
+// console.log('height:', height);
+// // height: 10
