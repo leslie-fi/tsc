@@ -16,12 +16,30 @@ var LoginController = /** @class */ (function () {
     LoginController.prototype.getLogin = function (_req, res) {
         res.send("\n      <form method='POST'>\n        <div><label for=\"email\">Email</label>\n          <input name=\"email\" type=\"text\">\n            <div><label for=\"password\">Password</label><input name=\"password\" type=\"password\"></div>\n          </input>\n        </div>\n        <button>Submit</button>\n      </form>\n    ");
     };
+    LoginController.prototype.postLogin = function (req, res, _next) {
+        var _a = req.body, email = _a.email, password = _a.password;
+        if (email && password && email === 'hi@hi.com' && password === 'pw') {
+            //mark person as logged in
+            req.session = { loggedIn: true };
+            res.redirect('/');
+        }
+        else {
+            res.send('Invalid credentials');
+        }
+    };
     __decorate([
         decorators_1.get('/login'),
         __metadata("design:type", Function),
         __metadata("design:paramtypes", [Object, Object]),
         __metadata("design:returntype", void 0)
     ], LoginController.prototype, "getLogin", null);
+    __decorate([
+        decorators_1.post('/login'),
+        decorators_1.bodyValidator('email', 'password'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Object, Object, Function]),
+        __metadata("design:returntype", void 0)
+    ], LoginController.prototype, "postLogin", null);
     LoginController = __decorate([
         decorators_1.controller('/auth')
     ], LoginController);

@@ -1,5 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { get, controller } from './decorators';
+import { RequestWithBody } from '../routes/loginRoutes';
+import { get, controller, post, bodyValidator } from './decorators';
+
 
 @controller('/auth')
 class LoginController {
@@ -15,5 +17,17 @@ class LoginController {
         <button>Submit</button>
       </form>
     `);
+  }
+  @post('/login')
+  @bodyValidator('email', 'password')
+  postLogin(req: RequestWithBody, res: Response, _next: NextFunction): void{
+    const { email, password } = req.body;
+    if (email && password && email === 'hi@hi.com' && password === 'pw') {
+      //mark person as logged in
+      req.session = { loggedIn: true };
+      res.redirect('/');
+    } else {
+      res.send('Invalid credentials');
+    }
   }
 }

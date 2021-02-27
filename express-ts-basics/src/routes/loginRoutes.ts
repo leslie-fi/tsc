@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 
-interface RequestWithBody extends Request {
+export interface RequestWithBody extends Request {
   body: { [key: string]: string | undefined };
 }
 
@@ -14,25 +14,6 @@ function requireAuth(req: Request, res: Response, next: NextFunction) {
 }
 
 const router = Router();
-
-// router.get('/login', (_req: Request, res: Response, _next: NextFunction) => {
-  
-// });
-
-router.post(
-  '/login',
-  (req: RequestWithBody, res: Response, _next: NextFunction) => {
-    const { email, password } = req.body;
-    if (email && password && email === 'hi@hi.com' && password === 'pw') {
-      //mark person as logged in
-      req.session = { loggedIn: true };
-      res.redirect('/');
-    } else {
-      res.send('Invalid credentials');
-    }
-  }
-);
-
 router.get('/', (req: RequestWithBody, res: Response, _next: NextFunction) => {
   if (!!req.session && req.session.loggedIn) {
     res.send(`
@@ -45,7 +26,7 @@ router.get('/', (req: RequestWithBody, res: Response, _next: NextFunction) => {
     res.send(`
       <div>
         <div>You are NOT logged in!</div>
-        <a href='/login'>Log In</a>
+        <a href='/auth/login'>Log In</a>
       </div>
     `);
   }
