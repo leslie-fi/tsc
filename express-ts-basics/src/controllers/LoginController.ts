@@ -1,7 +1,9 @@
-import { Router, Request, Response, NextFunction } from 'express';
-import { RequestWithBody } from '../routes/loginRoutes';
+import { Request, Response, NextFunction } from 'express';
 import { get, controller, post, bodyValidator } from './decorators';
 
+export interface RequestWithBody extends Request {
+  body: { [key: string]: string | undefined };
+}
 
 @controller('/auth')
 class LoginController {
@@ -29,5 +31,11 @@ class LoginController {
     } else {
       res.send('Invalid credentials');
     }
+  }
+
+  @get('/logout')
+  getLogout(req: Request, res: Response, _next: NextFunction): void {
+      req.session = undefined;
+      res.redirect('/');
   }
 }

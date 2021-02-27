@@ -1,10 +1,11 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import cookieSession from 'cookie-session';
-import { router } from './routes/loginRoutes';
 import helmet from 'helmet';
 import { AppRouter } from './AppRouter';
 import './controllers/LoginController';
+import './controllers/RootController';
+
 const app: Application = express();
 
 app.use(helmet());
@@ -12,7 +13,6 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());
 app.use(cookieSession({ keys: ['qwerty'] }));
-app.use(router);
 app.use(AppRouter.getInstance());
 
 
