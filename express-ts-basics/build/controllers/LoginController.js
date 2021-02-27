@@ -13,6 +13,9 @@ var decorators_1 = require("./decorators");
 var LoginController = /** @class */ (function () {
     function LoginController() {
     }
+    LoginController.prototype.add = function (a, b) {
+        return a + b;
+    };
     LoginController.prototype.getLogin = function (_req, res) {
         res.send("\n      <form method='POST'>\n        <div><label for=\"email\">Email</label>\n          <input name=\"email\" type=\"text\">\n            <div><label for=\"password\">Password</label><input name=\"password\" type=\"password\"></div>\n          </input>\n        </div>\n        <button>Submit</button>\n      </form>\n    ");
     };
@@ -31,6 +34,12 @@ var LoginController = /** @class */ (function () {
         req.session = undefined;
         res.redirect('/');
     };
+    __decorate([
+        decorators_1.get('/'),
+        __metadata("design:type", Function),
+        __metadata("design:paramtypes", [Number, Number]),
+        __metadata("design:returntype", void 0)
+    ], LoginController.prototype, "add", null);
     __decorate([
         decorators_1.get('/login'),
         __metadata("design:type", Function),

@@ -50,7 +50,7 @@ export function controller(routePrefix: string) {
         const validator = bodyValidators(requiredBodyProps);
  
       if (path) {
-        console.log(method, path);
+        console.log(method,routePrefix, path);
         router[method](
           `${routePrefix}${path}`,
           ...middlewares,

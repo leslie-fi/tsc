@@ -40,7 +40,7 @@ function controller(routePrefix) {
                 [];
             var validator = bodyValidators(requiredBodyProps);
             if (path) {
-                console.log(method, path);
+                console.log(method, routePrefix, path);
                 router[method].apply(router, __spreadArrays(["" + routePrefix + path], middlewares, [validator,
                     routeHandler]));
             }

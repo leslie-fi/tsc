@@ -22,7 +22,7 @@ class LoginController {
   }
   @post('/login')
   @bodyValidator('email', 'password')
-  postLogin(req: RequestWithBody, res: Response, _next: NextFunction): void{
+  postLogin(req: RequestWithBody, res: Response, _next: NextFunction): void {
     const { email, password } = req.body;
     if (email && password && email === 'hi@hi.com' && password === 'pw') {
       //mark person as logged in
@@ -35,7 +35,7 @@ class LoginController {
 
   @get('/logout')
   getLogout(req: Request, res: Response, _next: NextFunction): void {
-      req.session = undefined;
-      res.redirect('/');
+    req.session = undefined;
+    res.redirect('/');
   }
 }
